@@ -52,21 +52,29 @@ class BasePyMC3Model(ABC, BaseEstimator):
 
     def fit(self, X: pd.DataFrame, y: Union[pd.Series, np.ndarray]):
         self._init_shared(X, y)
+        self._mean_trace = {}
         self._init_model_context()
         self.trace = self.model_block()
         return self
 
+    def _construct_mean_trace(self, force=False):
+        if self._mean_trace and not force:
+            return
+
+        for k in self.trace.varnames:
+            self._mean_trace[k] = self.trace[k].mean(axis=0)
+
+        self._mean_trace = [self._mean_trace]
+
     def predict(self, X, mean=False, **kwargs):
         with self._data_context(X):
+
+            trace = self.trace if not mean else self._mean_trace
             ppc = pm.sample_posterior_predictive(
-                trace=self.trace,
+                trace=trace,
                 model=self.model,
                 **kwargs
             )
-
-            if mean:
-                for k in ppc:
-                    ppc[k] = ppc[k].mean(axis=0)
 
             if len(ppc) > 1: # multi-response, deal with later
                 logger.warning(
