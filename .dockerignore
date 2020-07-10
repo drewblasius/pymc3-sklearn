@@ -1,0 +1,5 @@
+.tox/
+.git/
+.pytest_cache/
+build/
+*.pyc
