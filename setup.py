@@ -7,5 +7,5 @@ setup(
     version="0.1",
     packages=["sk_pymc3"],
     license="MIT License",
-    long_description=open("README.md").read(),
+    long_description=open("README.rst").read(),
 )

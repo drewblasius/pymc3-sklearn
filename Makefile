@@ -10,9 +10,13 @@ build-container:
 	docker build -t drewblasius/pymc3-sklearn .
 
 run-test-container:
-	docker run --rm -v ${PWD}:/home/repo drewblasius/pymc3-sklearn make run-test
+	docker run --rm -v ${PWD}:/home/project --workdir /home/project \
+		drewblasius/pymc3-sklearn make test
 
 test-container: build-container run-test-container
 
 test:
-	pytest
+	tox
+
+clean:
+	rm -rf .tox/
