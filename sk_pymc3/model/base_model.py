@@ -22,6 +22,9 @@ class BasePyMC3Model(ABC, BaseEstimator):
         """
         pass
 
+    def fit_model(self) -> pm.backends.base.MultiTrace:
+        return self.trace
+
     def _init_shared(self, X: pd.DataFrame, y: Optional[Union[pd.Series, np.ndarray]]):
         self.y = tt.shared(y) if y is not None else None
         self.X = {}

@@ -10,8 +10,13 @@ class MissingLabelEncoder(LabelEncoder):
             raise ValueError()
         
         self._true_classes = set(y)
-        z = np.concatenate([y, [_new_class_placeholder]])
-        return super(self, LabelEncoder).fit(z)
+        z = np.concatenate([y, [self.__new_class_placeholder]])
+        return super().fit(z)
 
     def transform(self, y):
-        pass
+        z = np.where(
+            np.isin(y, self._true_classes),
+            y,
+            self.__new_class_placeholder,
+        )
+        return super().transform(z)
