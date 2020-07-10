@@ -1,3 +1,5 @@
+import numpy as np
+
 from sklearn.preprocessing import LabelEncoder
 
 
@@ -15,7 +17,7 @@ class MissingLabelEncoder(LabelEncoder):
 
     def transform(self, y):
         z = np.where(
-            np.isin(y, self._true_classes),
+            np.isin(y, list(self._true_classes)),
             y,
             self.__new_class_placeholder,
         )
