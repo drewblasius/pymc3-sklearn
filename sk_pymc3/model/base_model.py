@@ -4,7 +4,7 @@ import pandas as pd
 import pymc3 as pm
 import theano as tt
 
-from abc import ABC, abstractmethod
+from collections.abc import ABC, abstractmethod
 from contextlib import contextmanager
 from sklearn.base import BaseEstimator
 from typing import List, Optional, Union
