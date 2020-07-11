@@ -4,12 +4,13 @@ import pandas as pd
 import pymc3 as pm
 import theano as tt
 
-from collections.abc import ABC, abstractmethod
+from abc import ABC, abstractmethod
 from contextlib import contextmanager
 from sklearn.base import BaseEstimator
 from typing import List, Optional, Union
 
 logger = logging.getLogger(__name__)
+
 
 class BasePyMC3Model(ABC, BaseEstimator):
 
