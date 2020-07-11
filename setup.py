@@ -1,11 +1,11 @@
-from distutils.core import setup
+from setuptools import find_packages, setup
 
 setup(
     author="Drew Blasius",
     author_email="drewblasius@gmail.com",
-    name="PyMC3-Sklearn",
+    name="pymc3-sklearn",
     version="0.1",
-    packages=["sk_pymc3"],
+    packages=find_packages(include=["sk_pymc3", "sk_pymc3.*"]),
     license="MIT License",
     long_description=open("README.rst").read(),
 )
