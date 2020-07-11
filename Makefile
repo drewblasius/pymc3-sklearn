@@ -18,7 +18,7 @@ run-test-container:
 
 test-container: build-container run-test-container
 
-test:
+test: install
 	tox
 
 clean:
