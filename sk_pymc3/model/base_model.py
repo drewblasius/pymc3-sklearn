@@ -35,7 +35,7 @@ class BasePyMC3Model(ABC, BaseEstimator):
 
         self.X_ = X.copy()
 
-    def _set_shared(self, X)
+    def _set_shared(self, X):
         for x in self.X_:
             self.X[x].set_value(X[x])
 
