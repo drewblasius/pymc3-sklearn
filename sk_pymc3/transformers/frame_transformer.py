@@ -2,17 +2,21 @@
 ColumnTransformer that is pd.DataFrame-oriented.
 """
 
-from sklearn.compose import BaseEstimator, TransformerMixin
-from typing import List, Optional, Union
+import pandas as pd
+import numpy as np
+
+from copy import copy
+from sklearn.base import BaseEstimator, TransformerMixin
+from typing import List, Optional, Tuple, Union
 
 
 class PassthroughTransformer(TransformerMixin, BaseEstimator):
 
-    def fit(self, X, y):
+    def fit(self, y):
         return self
 
-    def transform(self, X, y):
-        return X
+    def transform(self, y):
+        return y
 
 
 class FrameTransformer(TransformerMixin, BaseEstimator):
@@ -23,17 +27,17 @@ class FrameTransformer(TransformerMixin, BaseEstimator):
     def __init__(
             self, 
             transformers: List[Tuple[str, TransformerMixin, List[str]]],
-            remainder: Optional[str] = "passthrough")
+            remainder: Optional[str] = "drop",
     ):
 
         if remainder not in ("passthrough", "drop"):
             raise ValueError("`remainder` must be one of ('passthrough', 'drop')")
 
+        self.remainder = remainder
         self.transformers = transformers
 
-
     def _handle_passthrough(
-            transformer: Union[str, TransformerMixin]
+        self, transformer: Union[str, TransformerMixin]
     ) -> TransformerMixin:
         if transformer == "passthrough":
             return PassthroughTransformer()
@@ -44,9 +48,10 @@ class FrameTransformer(TransformerMixin, BaseEstimator):
         self.fitted_transformers = []
         for name, transformer, cols in self.transformers:
             for col in cols:
-                tr = self._handle_passthrough(transfomer).copy()
+                tr = copy(
+                    self._handle_passthrough(transformer)
+                )
                 tr.fit(X[col].values.reshape(-1, 1))
-
                 self.fitted_transformers.append(
                     (name, tr, col)
                 )
@@ -56,7 +61,7 @@ class FrameTransformer(TransformerMixin, BaseEstimator):
     def transform(self, X, y=None):
         Xo = X.copy()
         for name, transformer, col in self.fitted_transformers:
-            Xo[col] = transformer.transform(Xo[col].values)
+            Xo[col] = transformer.transform(Xo[col].values.reshape(-1, 1))
         
         if self.remainder == "drop":
             Xo = Xo[
