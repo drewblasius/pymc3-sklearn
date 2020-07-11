@@ -31,7 +31,7 @@ class BasePyMC3Model(ABC, BaseEstimator):
         self.X = {}
         self.size = {}
         for x in X:
-            self.X[x] = tt.shared(X[x])
+            self.X[x] = tt.shared(X[x].values)
             self.size[x] = X[x].nunique() + 1  # +1 for non-obseved cases
 
         self.X_ = X.copy()
