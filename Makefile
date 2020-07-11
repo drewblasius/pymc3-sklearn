@@ -1,7 +1,10 @@
 .PHONY: build test
 
 install:
-	python setup.py install
+	pip install .
+
+uninstall:
+	pip uninstall pymc3-sklearn
 
 dist:
 	python setup.py sdist
