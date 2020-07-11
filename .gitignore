@@ -2,4 +2,5 @@ build/
 .tox/
 *.pyc
 notebooks/.ipynb_checkpoints
+notebooks/scratch/
 pymc3_sklearn.egg-info/
