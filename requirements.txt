@@ -3,3 +3,4 @@ pandas
 numpy
 pymc3
 pytest
+pytest-cov
