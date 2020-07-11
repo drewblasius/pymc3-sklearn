@@ -1,4 +1,5 @@
 build/
+dist/
 .tox/
 *.pyc
 notebooks/.ipynb_checkpoints
