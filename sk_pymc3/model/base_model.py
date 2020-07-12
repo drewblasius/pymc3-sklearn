@@ -70,12 +70,16 @@ class BasePyMC3Model(ABC, BaseEstimator):
         self.trace = self.model_block()
         return self
 
-    def predict(self, X, mean=False, **kwargs):
+    def predict(self, X, mean=False, fast=True, **kwargs):
         with self._data_context(X):
 
-            trace = self.trace if not mean else self._mean_trace
-            ppc = pm.sample_posterior_predictive(
-                trace=trace,
+            if fast:
+                sample_ppc = pm.fast_sample_posterior_predictive
+            else:
+                sample_ppc = pm.sample_posterior_predictive
+
+            ppc = sample_ppc(
+                trace=self.trace,
                 model=self.model,
                 **kwargs
             )
