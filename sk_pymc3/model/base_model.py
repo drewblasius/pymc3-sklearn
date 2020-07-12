@@ -70,15 +70,6 @@ class BasePyMC3Model(ABC, BaseEstimator):
         self.trace = self.model_block()
         return self
 
-    def _construct_mean_trace(self, force=False):
-        if self._mean_trace and not force:
-            return
-
-        for k in self.trace.varnames:
-            self._mean_trace[k] = self.trace[k].mean(axis=0)
-
-        self._mean_trace = [self._mean_trace]
-
     def predict(self, X, mean=False, **kwargs):
         with self._data_context(X):
 
