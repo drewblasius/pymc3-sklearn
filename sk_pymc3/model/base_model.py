@@ -38,7 +38,10 @@ class BasePyMC3Model(ABC, BaseEstimator):
 
     def _set_shared(self, X):
         for x in self.X_:
-            self.X[x].set_value(X[x])
+            logger.debug(
+                f"setting {x} to shared value (old shape {self.X_[x].shape}, new shape {X[x].shape})"
+            )
+            self.X[x].set_value(X[x].values)
 
     def _reset_shared(self):
         self._set_shared(self.X_)
