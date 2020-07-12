@@ -92,4 +92,6 @@ class BasePyMC3Model(ABC, BaseEstimator):
                 return ppc
             
             k = list(ppc)[0]
+            if mean:
+                return ppc[k].mean(axis=0)
             return ppc[k]
