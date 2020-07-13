@@ -33,3 +33,7 @@ release:
 .PHONY: dist
 dist:
 	python setup.py sdist bdist_wheel	
+
+.PHONY: install-compiler
+install-compiler:
+	sudo apt-get install g++
