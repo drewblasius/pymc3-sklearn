@@ -63,10 +63,25 @@ class BasePyMC3Model(ABC, BaseEstimator):
         self._init_model_context()
         self.trace = self.model_block()
         return self
+    
+    @staticmethod
+    def _rep_frame_if_singleton(X: pd.DataFrame) -> Tuple[pd.DataFrame, bool]:
+        if X.shape[0] > 1:
+            return X, False
+        return pd.concat([X] * 2), True
+    
+    @staticmethod
+    def _post_unrep_ppc(ppc_dict: dict):
+        dk = list(ppc_dict)
+        for k in dk:
+            ppc_dict[k] = ppc_dict[k][..., :1]
+        return ppc_dict
 
     def predict(self, X, mean=False, fast=True, **kwargs):
-        with self._data_context(X):
+        X, rep = self._rep_frame_if_singleton(X)
 
+        with self._data_context(X):
+            
             if fast:
                 sample_ppc = pm.fast_sample_posterior_predictive
             else:
@@ -77,8 +92,12 @@ class BasePyMC3Model(ABC, BaseEstimator):
                 model=self.model,
                 **kwargs
             )
+            
+            # Theano broadcasts shared things incorrectly if singletons.
+            if rep:
+                ppc = self._post_unrep_ppc(ppc)
 
-            if len(ppc) > 1: # multi-response, deal with later
+            if len(ppc) > 1:  # multi-response, deal with later
                 logger.warning(
                     "multiple responses found in pymc3 model context "
                     "returning dict of arrays rather than arrays themselves."
