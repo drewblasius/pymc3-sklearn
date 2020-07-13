@@ -7,7 +7,7 @@ import theano as tt
 from abc import ABC, abstractmethod
 from contextlib import contextmanager
 from sklearn.base import BaseEstimator
-from typing import List, Optional, Union
+from typing import List, Optional, Tuple, Union
 
 logger = logging.getLogger(__name__)
 
