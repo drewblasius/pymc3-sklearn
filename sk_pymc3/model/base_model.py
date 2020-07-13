@@ -48,17 +48,11 @@ class BasePyMC3Model(ABC, BaseEstimator):
 
     @contextmanager
     def _data_context(self, X: pd.DataFrame, *args, **kwargs):
-        err = None
         try:
             self._set_shared(X)
             yield None
-        except BaseException as err:
-            pass
         finally:
             self._reset_shared()
-        
-        if err is not None:
-            raise err
 
     def _init_model_context(self):
         self.model = pm.Model()
